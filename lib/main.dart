@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'quiz_brain.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
 
+//defining the QuizBrain class objects 
 QuizBrain quizBrain = QuizBrain();
 
 void main() => runApp(Quizzler());
@@ -32,20 +34,36 @@ class _QuizPageState extends State<QuizPage> {
     //list of Icon widgets
   ];
 
+  //Checking answer and update the state of the quizBrain
   void checkAnswer(bool userPickedAnswer) {
     bool correctAnswer = quizBrain.getQuestionAnswer();
 
     setState(() {
-      if (userPickedAnswer == correctAnswer) {
-        scoreKeeper.add(
-          Icon(Icons.check, color: Colors.green),
-        );
-      } else {
-        scoreKeeper.add(
-          Icon(Icons.close, color: Colors.red),
-        );
+      //user alert when reaching the end of the quiz
+      if (quizBrain.isFinished() == true) {
+        Alert(
+          context: context,
+          type: AlertType.error,
+          title: "Congratulations !",
+          desc: "You have successfully completed our quiz.",
+        ).show();
+        //reset questions
+        quizBrain.reset();
+        //reset score
+        scoreKeeper = [];
+      } 
+      else {
+        if (userPickedAnswer == correctAnswer) {
+          scoreKeeper.add(
+            Icon(Icons.check, color: Colors.green),
+          );
+        } else {
+          scoreKeeper.add(
+            Icon(Icons.close, color: Colors.red),
+          );
+        }
+        quizBrain.nextQuestion();
       }
-      quizBrain.nextQuestion();
     });
   }
 
@@ -126,6 +144,7 @@ class _QuizPageState extends State<QuizPage> {
           ),
         ),
         Row(
+          //update the score
           children: scoreKeeper,
         ),
       ],
