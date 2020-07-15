@@ -32,6 +32,23 @@ class _QuizPageState extends State<QuizPage> {
     //list of Icon widgets
   ];
 
+  void checkAnswer(bool userPickedAnswer) {
+    bool correctAnswer = quizBrain.getQuestionAnswer();
+
+    setState(() {
+      if (userPickedAnswer == correctAnswer) {
+        scoreKeeper.add(
+          Icon(Icons.check, color: Colors.green),
+        );
+      } else {
+        scoreKeeper.add(
+          Icon(Icons.close, color: Colors.red),
+        );
+      }
+      quizBrain.nextQuestion();
+    });
+  }
+
   // List<String> questions = [
   //   'You can lead a cow down stairs but not up stairs.',
   //   'Approximately one quarter of human bones are in the feet.',
@@ -46,7 +63,7 @@ class _QuizPageState extends State<QuizPage> {
 
   // Question q1 = Question(
   //     q: 'You can lead a cow down stairs but not up stairs.', a: false);
-  
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -83,24 +100,8 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                bool correctAnswer =
-                    quizBrain.getQuestionAnswer();
-
-                if (correctAnswer == true) {
-                  print('Correct Answer !');
-                } else {
-                  print('Wrong Answer !');
-                }
-
-                setState(() {
-                  // scoreKeeper.add(
-                  //   Icon(
-                  //     Icons.check,
-                  //     color: Colors.green,
-                  //   ),
-                  // );
-                  quizBrain.nextQuestion();
-                });
+                //user picked true.
+                checkAnswer(true);
               },
             ),
           ),
@@ -118,23 +119,8 @@ class _QuizPageState extends State<QuizPage> {
                 ),
               ),
               onPressed: () {
-                bool correctAnswer =
-                    quizBrain.getQuestionAnswer();
-
-                if (correctAnswer == false) {
-                  print('Correct Answer !');
-                } else {
-                  print('Wrong Answer !');
-                }
-                setState(() {
-                  // scoreKeeper.add(
-                  //   Icon(
-                  //     Icons.close,
-                  //     color: Colors.red,
-                  //   ),
-                  // );
-                  quizBrain.nextQuestion();
-                });
+                //user picked false.
+                checkAnswer(false);
               },
             ),
           ),
@@ -146,9 +132,3 @@ class _QuizPageState extends State<QuizPage> {
     );
   }
 }
-
-/*
-question1: , false,
-question2: , true,
-question3: , true,
-*/
